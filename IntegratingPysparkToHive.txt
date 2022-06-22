@@ -1,0 +1,22 @@
+Connect Pyspark to hive
+
+Configuration:
+Spark
+1.https://docs.cloudera.com/HDPDocuments/HDP2/HDP-2.6.5/bk_spark-component-guide/content/configure-spark-sql-hive-warehouse-directory.html
+2.Files to put in spark-hadoop/conf folder
+hive-site.ml
+core-site.xml
+hdfs-site.xml
+
+How to Connect to Remote Hive Cluster with PySpark
+The following is how I connect to hive on a remote cluster, and also to hive tables that use hbase as external storage
+
+Copy core-site.xml, hdfs-site.xml, hive-site.xml, hbase-site.xml, from your cluster running hive, and paste it to your spark’s /conf directory
+add any jar files to spark’s /jar directory.
+run pyspark
+Create a spark session and make sure to enable hive support.
+
+hive-site.xml is found at 
+cd /etc/hive/conf/
+core-site.xml/hdfs-site.xml at
+cd /etc/hadoop/conf
