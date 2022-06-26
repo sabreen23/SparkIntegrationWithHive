@@ -1,0 +1,67 @@
+!pip install mysql.connector
+import mysql.connector
+conn_object=mysql.connector.connect(host="localhost",user="root",password="")
+db_cursor = conn_object.cursor()
+db_cursor.execute("CREATE DATABASE flight1;") 
+
+!pip install pyspark
+import pyspark
+from pyspark.sql import SparkSession
+spark = SparkSession.builder.config("spark.jars", "mysql-connector-java-5.1.24.jar") \
+    .master("local").appName("PySpark_MySQL").getOrCreate()
+
+//make sure the jar file is placed in spark/jar folder
+
+
+AirlineDF = spark.read.option("header", "true").csv("airlines1.csv")
+
+AirlineDF5 = AirlineDF.select("_c0","Year","Quarter", "Month", "DayofMonth", "DayofWeek" , \
+                              "FlightDate","Reporting_Airline","DOT_ID_Reporting_Airline", \
+                              "OriginCityName" , "OriginState", "OriginStateFips", "OriginStateName", \
+                              "Distance" , "DistanceGroup","CarrierDelay","WeatherDelay", "NASDelay")
+AirlineDF5.count()
+
+**************************************************
+Write data from pyspark dataframe to Mysql Database
+**************************************************
+!pip install findspark
+
+import findspark
+
+findspark.add_packages('mysql:mysql-connector-java:8.0.29')
+
+AirlineDF5.write.format('jdbc').options(
+      url='jdbc:mysql://localhost:3306/flight1',
+      driver='com.mysql.jdbc.Driver',
+      dbtable='Airline',
+      user='root',
+      password='').mode('append').save()
+
+**************************************************
+Read data form Mysql using Pyspark
+**************************************************
+AirDF = spark.read.format("jdbc").option("url", "jdbc:mysql://localhost:3306/flight1") \
+    .option("driver", "com.mysql.jdbc.Driver").option("dbtable", "Airline") \
+    .option("user", "root").option("password", "").load()
+
+AirDF.count()
+
+DF=AirDF.select("OriginStateName").groupby("OriginStateName").count()
+
+DF.show()
+
+DF.write.format('jdbc').options(
+      url='jdbc:mysql://localhost:3306/flight1',
+      driver='com.mysql.jdbc.Driver',
+      dbtable='Report',
+      user='root',
+      password='').mode('append').save()
+
+**************************************************
+Write data to file
+**************************************************
+import pyspark
+from pyspark import SparkContext
+RDD=DF.rdd
+RDD.saveAsTextFile("REport.txt")
+

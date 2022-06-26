@@ -1,0 +1,50 @@
+https://george-jen.gitbook.io/data-science-and-apache-spark/download-and-install-spark
+Download and install Spark
+>make sure choose only 3.0.0 with Apache Hadoop 2.7, which the codes of this courses will be running with
+​​https://spark.apache.org/downloads.html
+If you are using windows, and you do not have winzip or winrar installed, there are free alternatives of decompressing software that can expand tgz compressed file, that is needed to unpack Spark downloaded tgz file.
+​​
+>For windows, it is needed to setup for Hadoop, by download winutils.exe
+​​
+Specifically, you can just download below winutils.exe file
+​​>https://github.com/steveloughran/winutils/blob/master/hadoop-2.7.1/bin/winutils.exe
+
+You will need to first create the winutils folders, by opening a cmd window as administrator
+>mkdir c:\winutils
+>mkdir c:\winutils\bin
+>Then download the winutils.exe into c:\winutils\bin folder   
+c:\winutils\bin\
+After download, test to run
+>c:\winutils\bin\winutils.exe
+By now, you have downloaded and extracted Spark, and winutils.exe (Hadoop utility for windows), next task is to set environment varibales in Windows control panel->system->advanced system settings->environment variables.  Make sure all environment variables 
+Must NOT contains any blank space even at the end
+Only create/modify user variables, NOT system variables
+Setup below user environment variables
+>Set up SPARK_HOME environment variable to point to home dir of Spark, in our case:
+SPARK_HOME=c:\spark\spark
+>Append %SPARK_HOME%\bin to the PATH environment variable
+>Set up HADOOP_HOME environment variable to point to Hadoop home dir, in our case:
+HADOOP_HOME=c:\winutils
+>Append %HADOOP_HOME%\bin to the PATH environment variable
+>Set up default /tmp/hive directory that Spark needs. This means, in Windows, for example, you need to create a folder for example
+Open a cmd command window as administrator
+>mkdir c:\tmp
+>mkdir c:\tmp\hive
+Then set permission by
+>%HADOOP_HOME%\bin\winutils.exe chmod –R 777 c:\tmp\hive
+>Also point %TEMP% and %TMP% to c:\tmp, this means, create user environment variables TEMP and TMP:
+(>mkdir c:\temp)
+>TEMP=c:\temp   
+>TMP=c:\tmp
+if c:\temp and/or c:\tmp do not exist, please create them 
+Make sure your have defined environment variables in Windows control panel->system->advanced system settings->environment variables:
+The PATH environment variable should be similar to:
+Then you are done with Spark setup.
+
+
+If succesfully installed 
+****************
+http://localhost:4040/jobs/
+-------------
+check spark is installed by running cmd
+>spark-shell
